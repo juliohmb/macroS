@@ -1,0 +1,9 @@
+[package]
+name = "macro_s"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+device_query = "2.0.0"
+eframe = "0.27.2"
+egui = "0.27"
