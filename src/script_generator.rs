@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::{self, Write};
-use super::actions::Action;
+use super::actions::{Action, Event};
 
 pub fn generate_python_script(actions: Vec<Action>) -> io::Result<()> {
     let mut file = File::create("macro_script.py")?;
@@ -11,14 +11,13 @@ pub fn generate_python_script(actions: Vec<Action>) -> io::Result<()> {
 
     writeln!(file, "actions = [")?;
     for action in actions {
-        match action.event.as_str() {
-            e if e.starts_with("Key pressed:") => {
-                let key = e.trim_start_matches("Key pressed: ");
-                writeln!(file, "    {{'event': 'Key pressed: {}', 'timestamp': {}}},", key, action.timestamp)?;
+        match action.event {
+            Event::KeyPressed(s) => {
+                writeln!(file, "    {{'event': 'Key pressed: {}', 'timestamp': {}}},", s, action.timestamp)?;
             }
-            e if e.starts_with("Mouse clicked:") => {
-                let button = e.trim_start_matches("Mouse clicked: ");
-                writeln!(file, "    {{'event': 'Mouse clicked: {}', 'timestamp': {}}},", button, action.timestamp)?;
+            Event::MouseClicked(coords) => {
+                let (x, y) = coords;
+                writeln!(file, "    {{'event': 'Mouse clicked: {},{}', 'timestamp': {}}},", x, y, action.timestamp)?;
             }
             _ => {}
         }

@@ -1,9 +1,10 @@
 #[derive(Clone)]
 pub struct Action {
-    pub event: String,
+    pub event: Event,
     pub timestamp: u128,
 }
 
+#[derive(Clone)]
 pub enum Event {
     KeyPressed(String),
     MouseMoved((i32, i32)),
