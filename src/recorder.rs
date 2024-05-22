@@ -26,10 +26,14 @@ impl Recorder {
         let (tx, rx) = mpsc::channel();
         self.rx = Some(rx);
 
+        // inicio nova thread para captura de eventos
         thread::spawn(move || {
             let device_state = DeviceState::new();
             let start_time = Instant::now();
             let mut actions = Vec::new();
+            
+            // variavel declarada aqui para guardar o estado anterior das teclas
+            let mut old_keys: Vec<Keycode> = Vec::new();
 
             while rx_stopper.try_recv().is_err() {
                 // Captura de eventos de teclado
