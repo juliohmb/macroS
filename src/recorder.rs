@@ -3,6 +3,7 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Instant;
 use super::actions::{Action, Event};
+use super::keyboard::get_keyboard_settings;
 
 pub struct Recorder {
     actions: Vec<Action>,
@@ -31,9 +32,10 @@ impl Recorder {
             let device_state = DeviceState::new();
             let start_time = Instant::now();
             let mut actions = Vec::new();
-            
+
             // variavel declarada aqui para guardar o estado anterior das teclas
             let mut old_keys: Vec<Keycode> = Vec::new();
+            let (initial_delay, repeat_rate) = get_keyboard_settings();
 
             while rx_stopper.try_recv().is_err() {
                 // Captura de eventos de teclado
