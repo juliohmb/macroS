@@ -20,12 +20,13 @@ pub fn get_keyboard_settings() -> (Duration, Duration) {
         1 => 500,
         2 => 750,
         3 => 1000,
-        _ => 500, // Valor padrão
+        _ => 250, // Valor padrão
     };
 
-    // KeyboardSpeed: 0 (aprox. 31 ms), 31 (aprox. 2 ms)
+    // KeyboardSpeed: 0 (aprox. 2 rps), 31 (aprox. 30 rps)
+    let repeat_rate = ((27.5 * keyboard_speed) / 31) + 2.5;
     // Convertendo para intervalo entre repetições em milissegundos
-    let repeat_rate_ms = 1000 / (keyboard_speed + 1);
+    let repeat_rate_ms: u64 = (1000 / repeat_rate).parse();
 
     (
         Duration::from_millis(initial_delay_ms),
