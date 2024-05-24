@@ -12,8 +12,8 @@ pub fn generate_python_script(actions: Vec<Action>) -> io::Result<()> {
     writeln!(file, "actions = [")?;
     for action in actions {
         match action.event {
-            Event::KeyPressed(s) => {
-                writeln!(file, "    {{'event': 'Key pressed: {}', 'timestamp': {}}},", s, action.timestamp)?;
+            Event::KeyPressed { key, ctrl, alt, shift } => {
+                writeln!(file, "    {{'event': 'Key pressed: {}', 'timestamp': {}}},", key, action.timestamp)?;
             }
             Event::MouseClicked(coords) => {
                 let (x, y) = coords;
