@@ -51,51 +51,14 @@ impl Recorder {
                 let keys: Vec<Keycode> = device_state.get_keys();
                 for key in keys.iter() {
                     if !old_keys.contains(key) {
-                        let ctrl = keys.contains(&Keycode::LControl) || keys.contains(&Keycode::RControl);
-                        let alt = keys.contains(&Keycode::LAlt) || keys.contains(&Keycode::RAlt);
-                        let shift = keys.contains(&Keycode::LShift) || keys.contains(&Keycode::RShift);
-                        actions.push(Action {
-                            event: Event::KeyPressed{
-                                key: key.to_string(),
-                                ctrl,
-                                alt,
-                                shift,
-                            },
-                            timestamp: start_time.elapsed().as_millis(),
-                        });
-                        key_timestamps.insert(key.clone(), KeyStamp {stamp: Instant::now(), hold: false});
                         add_event(key, &keys, start_time, &mut actions, &mut key_timestamps, false)
                     }
                     else if let Some(key_stamp) = key_timestamps.get(key) {
                         if key_stamp.hold == true && key_stamp.stamp.elapsed() > repeat_rate {
-                            let ctrl = keys.contains(&Keycode::LControl) || keys.contains(&Keycode::RControl);
-                            let alt = keys.contains(&Keycode::LAlt) || keys.contains(&Keycode::RAlt);
-                            let shift = keys.contains(&Keycode::LShift) || keys.contains(&Keycode::RShift);
-                            actions.push(Action {
-                                event: Event::KeyPressed{
-                                    key: key.to_string(),
-                                    ctrl,
-                                    alt,
-                                    shift,
-                                },
-                                timestamp: start_time.elapsed().as_millis(),
-                            });
-                            key_timestamps.insert(key.clone(), KeyStamp {stamp: Instant::now(), hold: true});
+                            add_event(key, &keys, start_time, &mut actions, &mut key_timestamps, true)
                         }
                         else if key_stamp.stamp.elapsed() > initial_delay{
-                            let ctrl = keys.contains(&Keycode::LControl) || keys.contains(&Keycode::RControl);
-                            let alt = keys.contains(&Keycode::LAlt) || keys.contains(&Keycode::RAlt);
-                            let shift = keys.contains(&Keycode::LShift) || keys.contains(&Keycode::RShift);
-                            actions.push(Action {
-                                event: Event::KeyPressed{
-                                    key: key.to_string(),
-                                    ctrl,
-                                    alt,
-                                    shift,
-                                },
-                                timestamp: start_time.elapsed().as_millis(),
-                            });
-                            key_timestamps.insert(key.clone(), KeyStamp {stamp: Instant::now(), hold: true});
+                            add_event(key, &keys, start_time, &mut actions, &mut key_timestamps, true)
                         }
                     }
                 }
